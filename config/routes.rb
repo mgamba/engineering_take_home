@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
   resources :buildings, only: [:index, :create, :update, :destroy]
+  get "buildings/metadata"
 
   # Defines the root path route ("/")
   root "welcome#index"

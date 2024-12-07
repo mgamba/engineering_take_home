@@ -1,0 +1,30 @@
+.building-form .inputField {
+  margin-bottom: 10px;
+  display: flex;
+  flex-flow: row;
+  margin-bottom: 10px;
+  align-items: baseline;
+}
+
+.building-form input {
+  margin-bottom: 0px;
+}
+
+.building-form form fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  padding: .5rem 1rem;
+  border: 2px solid var(--bd-muted);
+  margin-bottom: 1rem;
+  border-radius: var(--bd-radius);
+}
+
+.building-form label {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: 33.3333%;
+  position: relative;
+  display: table;
+  margin: 0 0 1rem;
+}

@@ -1,10 +1,28 @@
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { getBuildings, addBuilding, updateBuilding, deleteBuilding } from "../api/buildingsApi"
-import { useState } from "react"
+import { getBuildings, addBuilding, updateBuilding, deleteBuilding, getBuildingMetadata } from "../api/buildingsApi"
+import { useState, useEffect } from "react"
+import BuildingForm from "./BuildingForm"
 
 const BuildingList = () => {
-  const [newBuilding, setNewBuilding] = useState('')
+  const [buildingMetadata, setBuildingMetadata] = useState({})
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function startFetching() {
+      const data = await getBuildingMetadata();
+      if (!ignore) {
+        setBuildingMetadata(data);
+      }
+    }
+    startFetching();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
   const queryClient = useQueryClient()
 
   const {
@@ -35,29 +53,10 @@ const BuildingList = () => {
     }
   })
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    addBuildingMutation.mutate({ title: newBuilding, completed: false })
-    setNewBuilding('')
+  const handleNewBuildingSubmit = (newBuilding) => {
+    console.log("handleNewBuildingSubmit");
+    addBuildingMutation.mutate({ ...newBuilding })
   }
-
-  const newBuildingSection = (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="new-building">Building form</label>
-      <div className="new-building">
-        <input
-          type="text"
-          id="building[client_id]"
-          value=""
-          onChange={(e) => setNewBuilding(e.target.value)}
-          placeholder="Enter client id"
-        />
-      </div>
-      <button className="submit">
-        submit
-      </button>
-    </form>
-  )
 
   let content
   if (isLoading) {
@@ -69,10 +68,17 @@ const BuildingList = () => {
       return (
         <article key={building.id}>
           <div className="building">
-            <label htmlFor="{building.id}">building {building.id} client id:</label>
-            <strong> {building.client_id} </strong>
+            <div>
+              <strong>building {building.id} </strong>
+              <div>
+                latitude: {building.latitude}
+              </div>
+              <div>
+                longitude : {building.longitude}
+              </div>
+            </div>
           </div>
-          <button className="trash" onClick={() => deleteBuildingMutation.mutate({ id: building.id })}>
+          <button onClick={() => deleteBuildingMutation.mutate({ id: building.id })}>
             Delete building
           </button>
         </article>
@@ -82,8 +88,13 @@ const BuildingList = () => {
 
   return (
     <main>
-      <h1>Buildings</h1>
-      {newBuildingSection}
+      <h2>Building Form</h2>
+      <BuildingForm
+        onSubmit={handleNewBuildingSubmit}
+        buildingMetadata={buildingMetadata}
+        initialValue={{}}
+      />
+      <h2>Building List</h2>
       {content}
     </main>
   );
