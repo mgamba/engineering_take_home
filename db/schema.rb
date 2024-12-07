@@ -22,7 +22,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_12_07_002220) do
     t.string "city"
     t.string "state"
     t.string "zip"
-    t.jsonb "custom_fields", default: {}, null: false
+    t.jsonb "additional_fields", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_buildings_on_client_id"

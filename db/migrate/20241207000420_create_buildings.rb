@@ -10,7 +10,7 @@ class CreateBuildings < ActiveRecord::Migration[7.2]
       t.string :state
       t.string :zip
 
-      t.jsonb :custom_fields, null: false, default: {}
+      t.jsonb :additional_fields, null: false, default: {}
 
       t.timestamps
     end
