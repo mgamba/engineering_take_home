@@ -17,21 +17,21 @@ const BuildingList = () => {
   const addBuildingMutation = useMutation(addBuilding, {
     onSuccess: () => {
       //invalidate cache and trigger refetch
-      queryClient.invalidatesQueries("buildings")
+      queryClient.invalidateQueries("buildings")
     }
   })
 
   const updateBuildingMutation = useMutation(updateBuilding, {
     onSuccess: () => {
       //invalidate cache and trigger refetch
-      queryClient.invalidatesQueries("buildings")
+      queryClient.invalidateQueries("buildings")
     }
   })
 
   const deleteBuildingMutation = useMutation(deleteBuilding, {
     onSuccess: () => {
       //invalidate cache and trigger refetch
-      queryClient.invalidatesQueries("buildings")
+      queryClient.invalidateQueries("buildings")
     }
   })
 
@@ -43,7 +43,7 @@ const BuildingList = () => {
 
   const newBuildingSection = (
     <form onSubmit={handleSubmit}>
-      <label htmlfor="new-building">Building form</label>
+      <label htmlFor="new-building">Building form</label>
       <div className="new-building">
         <input
           type="text"
@@ -65,7 +65,19 @@ const BuildingList = () => {
   } else if (isError) {
     content = <p>{error.message}</p>
   } else {
-    content = JSON.stringify(buildings)
+    content = buildings.buildings.map((building) => {
+      return (
+        <article key={building.id}>
+          <div className="building">
+            <label htmlFor="{building.id}">building {building.id} client id:</label>
+            <strong> {building.client_id} </strong>
+          </div>
+          <button className="trash" onClick={() => deleteBuildingMutation.mutate({ id: building.id })}>
+            Delete building
+          </button>
+        </article>
+      )
+    });
   }
 
   return (

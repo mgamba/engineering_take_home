@@ -1,4 +1,4 @@
-class BuildingsController < ApplicationController
+class BuildingsController < ApiController
   def index
     buildings = Building.all
     render json: { "total": buildings.count, buildings: }
@@ -7,5 +7,10 @@ class BuildingsController < ApplicationController
   def create
     building = Building.create(params)
     render json: building.as_json(root: "buildings")
+  end
+  
+  def destroy
+    Building.destroy(params[:id])
+    render json: {}
   end
 end
