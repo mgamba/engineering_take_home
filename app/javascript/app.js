@@ -1,11 +1,11 @@
 // Entry point for the build script in your package.json
 import React from 'react';
 
-import HelloWorld from './components/HelloWorld';
+import BuildingList from './components/BuildingList';
 
 const App = () => {
   return (
-    <HelloWorld />
+    <BuildingList />
   );
 };
 
