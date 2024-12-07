@@ -1,0 +1,74 @@
+class FieldValidator < ActiveModel::Validator
+  def validate(record)
+    begin
+      JSON::Validator.validate!(CustomFieldSchemaValidator::json_schema, record.schema)
+    rescue JSON::Schema::ValidationError => e
+      record.errors.add :schema, :invalid, message: e.message
+    end
+  end
+
+  # Custom Fields are associated with a single client
+  # Custom Fields can be one of 3 types: number, freeform, or enum
+  #  - Number fields can be any decimal number (e.g., Number of bathrooms: 2.5)
+  #  - Freeform fields are strings (e.g., Living room color: “Blue”)
+  #  - Enum is a choice of strings (e.g., Type of walkway: “Brick, Concrete, or None”)
+  class << self
+    def json_schema
+      {
+        "type": "object",
+        "required": ["fields"],
+        "properties": {
+          fields: {
+            type: "array",
+            items: {
+              "oneOf": [{
+                type: "object",
+                "required": ["fieldName", "fieldType"],
+                properties: {
+                  fieldName: {
+                    type: "string",
+                  },
+                  fieldType: {
+                    const: "Number",
+                  },
+                },
+              }, {
+                type: "object",
+                "required": ["fieldName", "fieldType"],
+                properties: {
+                  fieldName: {
+                    type: "string",
+                  },
+                  fieldType: {
+                    const: "Freeform",
+                  },
+                },
+              }, {
+                type: "object",
+                "required": ["fieldName", "fieldType", "fieldOptions"],
+                properties: {
+                  fieldName: {
+                    type: "string",
+                  },
+                  fieldType: {
+                    const: "Enum",
+                  },
+                  fieldOptions: {
+                    type: "array",
+                    items: {
+                      type: "string",
+                    },
+                    minItems: 1,
+                    uniqueItems: true,
+                  },
+                },
+              }]
+            },
+            minItems: 1,
+            uniqueItems: true,
+          },
+        },
+      }
+    end
+  end
+end

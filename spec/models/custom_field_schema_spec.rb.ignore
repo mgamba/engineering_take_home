@@ -1,0 +1,48 @@
+require 'rails_helper'
+
+RSpec.describe CustomField do
+  let(:client) { Client.create!(name: 'a name') }
+
+  describe '.schema' do
+    it 'saves when valid' do
+      valid_schema = {
+        fields: [
+          {
+            fieldName: "Number of bathrooms",
+            fieldType: "Number",
+          }, {
+            fieldName: "Living room color",
+            fieldType: "Freeform",
+          }, {
+            fieldName: "Type of walkway",
+            fieldType: "Enum",
+            fieldOptions: %w[Brick Concrete None],
+          }, {
+            fieldName: "Another number field",
+            fieldType: "Number",
+          },
+        ]
+      }
+
+      created = described_class.create(schema: valid_schema, client:)
+
+      expect(created.valid?).to be true
+      expect(created.id).not_to be nil
+    end
+
+    it 'fails to save when non-matching field type' do
+      valid_schema = { fields: [{
+        fieldName: "Number of bathrooms",
+        fieldType: "Not a real field",
+      }] }
+
+      created = described_class.create(schema: valid_schema, client:)
+
+      expect(created.valid?).to be false
+      expect(created.id).to be nil
+    end
+
+    # ...  etc.
+
+  end
+end

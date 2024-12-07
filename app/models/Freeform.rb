@@ -1,0 +1,3 @@
+class Freeform < CustomField
+end
+
