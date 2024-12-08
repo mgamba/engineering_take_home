@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getBuildings, addBuilding, updateBuilding, deleteBuilding, getBuildingMetadata } from "../api/buildingsApi"
 import { useState, useEffect } from "react"
 import BuildingForm from "./BuildingForm"
+import Map from "./Map"
 import { useNavigate } from 'react-router-dom'
 import { Outlet } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
@@ -10,7 +11,6 @@ import { useSearchParams } from 'react-router-dom'
 
 const BuildingList = () => {
   const navigate = useNavigate()
-  console.log("here");
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [buildingMetadata, setBuildingMetadata] = useState({})
@@ -32,7 +32,6 @@ const BuildingList = () => {
 
   const buildingPage = () => {
     const page = searchParams.get('page');
-    console.log("buildingPage() = ", page); 
     return page || 1
   }
 
@@ -43,11 +42,9 @@ const BuildingList = () => {
     data: buildings
   } = useQuery(['buildings', buildingPage()], getBuildings)
   const handleNextPageClick = () => {
-    console.log('handleNextPageClick -> setSearchParams');
     setSearchParams({ page: Number(buildingPage()) + 1 })
   }
   const handlePrevPageClick = () => {
-    console.log('handlePrevPageClick -> setSearchParams');
     setSearchParams({ page: buildingPage() - 1 || 1 })
   }
 
@@ -74,7 +71,6 @@ const BuildingList = () => {
   })
 
   const handleNewBuildingSubmit = (newBuilding) => {
-    console.log("handleNewBuildingSubmit");
     addBuildingMutation.mutate({ ...newBuilding })
   }
 
@@ -87,8 +83,8 @@ const BuildingList = () => {
     content = buildings.buildings.map((building) => {
       return (
         <article key={building.id}>
-          <div className="building">
-            <div>
+          <div className="building building-preview">
+            <div className="left">
               <strong>building {building.id} </strong>
               <div>
                 latitude: {building.latitude}
@@ -98,6 +94,9 @@ const BuildingList = () => {
               </div>
               <button onClick={() => navigate(`/building-detail/${building.id}`)}>Open</button>
               <button onClick={() => deleteBuildingMutation.mutate({ id: building.id })}>Delete</button>
+            </div>
+            <div className="right">
+              <Map latitude={building.latitude} longitude={building.longitude} />
             </div>
           </div>
         </article>
