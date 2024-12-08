@@ -4,8 +4,9 @@ const buildingsApi = axios.create({
   baseURL: "http://0.0.0.0:3002/"
 })
 
-export const getBuildings = async () => {
-  const response = await buildingsApi.get("/buildings");
+export const getBuildings = async ({ queryKey }) => {
+  const [queryType, page] = queryKey;
+  const response = await buildingsApi.get(`/buildings?page=${page}`);
   return response.data
 }
 

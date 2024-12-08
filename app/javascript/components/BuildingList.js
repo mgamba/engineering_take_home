@@ -23,15 +23,21 @@ const BuildingList = () => {
     };
   }, []);
 
-  const queryClient = useQueryClient()
-
+  const [buildingPage, setBuildingPage] = useState(1)
   const {
     isLoading,
     isError,
     error,
     data: buildings
-  } = useQuery('buildings', getBuildings)
+  } = useQuery(['buildings', buildingPage], getBuildings)
+  const handleNextPageClick = () => {
+    setBuildingPage(buildingPage + 1)
+  }
+  const handlePrevPageClick = () => {
+    setBuildingPage(buildingPage - 1 || 1)
+  }
 
+  const queryClient = useQueryClient()
   const addBuildingMutation = useMutation(addBuilding, {
     onSuccess: () => {
       //invalidate cache and trigger refetch
@@ -95,6 +101,8 @@ const BuildingList = () => {
         initialValue={{}}
       />
       <h2>Building List</h2>
+      <button onClick={handlePrevPageClick}>Prev Page</button>
+      <button onClick={handleNextPageClick}>Next Page</button>
       {content}
     </main>
   );

@@ -6,12 +6,11 @@ const BuildingForm = ({
   buildingMetadata,
   initialValue
 }) => {
-  const [newBuilding, setNewBuilding] = useState({})
+  const [newBuilding, setNewBuilding] = useState({ ...initialValue })
 
   const handleSubmit = (e) => {
     e.preventDefault()
     onSubmit(newBuilding)
-    setNewBuilding({})
   }
 
   const handleInputChange = (e) => {
