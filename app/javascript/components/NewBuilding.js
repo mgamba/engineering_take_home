@@ -15,7 +15,7 @@ const NewBuilding = ({ }) => {
   return (
     <div>
       Hello, I'm a form for a new building :)
-      <NavLink to={"/buildingList"}>Back to the list</NavLink>
+      <NavLink to={"/buildings"}>Back to the list</NavLink>
     </div>
   )
 }

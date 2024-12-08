@@ -10,9 +10,10 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
-  resources :buildings, only: [:index, :create, :update, :destroy]
-  get "buildings/metadata"
-
+  scope :format => true, :constraints => { :format => 'json' } do
+    get "buildings/metadata", :format => /json/
+    resources :buildings, only: [:index, :create, :update, :destroy, :show], :format => /json/
+  end
 
   match "*path", to: "welcome#index", via: :all
 

@@ -11,7 +11,7 @@ const App = () => {
     let ignore = false;
 
     if (location.pathname === '/') {
-      navigate('/buildingList');
+      navigate('/buildings');
     }
 
     return () => {
@@ -22,8 +22,8 @@ const App = () => {
   return (
     <>
       <div>
-        <NavLink to={"buildingList"}>Home</NavLink>
-        <NavLink to={"newBuilding"}>New</NavLink>
+        <NavLink to={"buildings"}>Home</NavLink>
+        <NavLink to={"buildings/new"}>New</NavLink>
       </div>
       <Outlet />
     </>

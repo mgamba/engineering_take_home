@@ -21,6 +21,11 @@ class BuildingsController < ApiController
     render json: { metadata: default_fields + custom_fields }
   end
 
+  def show
+    building = current_client.buildings.where(id: params[:id]).sole
+    render json: building.serialized_as_json
+  end
+ 
   private
 
   def building_params

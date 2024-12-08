@@ -6,24 +6,30 @@ const buildingsApi = axios.create({
 
 export const getBuildings = async ({ queryKey }) => {
   const [queryType, page] = queryKey;
-  const response = await buildingsApi.get(`/buildings?page=${page}`);
+  const response = await buildingsApi.get(`/buildings.json?page=${page}`);
+  return response.data
+}
+
+export const getBuilding = async ({ queryKey }) => {
+  const [queryType, buildingId] = queryKey;
+  const response = await buildingsApi.get(`/buildings/${buildingId}.json`);
   return response.data
 }
 
 export const addBuilding = async (building) => {
-  return await buildingsApi.post("/buildings", {building: building});
+  return await buildingsApi.post("/buildings.json", {building: building});
 }
 
 export const updateBuilding = async (building) => {
-  return await buildingsApi.patch(`/buildings/${building.id}`, building);
+  return await buildingsApi.patch(`/buildings/${building.id}.json`, building);
 }
 
 export const deleteBuilding = async ({ id }) => {
-  return await buildingsApi.delete(`/buildings/${id}`, id);
+  return await buildingsApi.delete(`/buildings/${id}.json`, id);
 }
 
 export const getBuildingMetadata = async() => {
-  const response = await buildingsApi.get("/buildings/metadata");
+  const response = await buildingsApi.get("/buildings/metadata.json");
   return response.data
 }
 

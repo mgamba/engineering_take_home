@@ -4,10 +4,7 @@ import { getBuildings, addBuilding, updateBuilding, deleteBuilding, getBuildingM
 import { useState, useEffect } from "react"
 import BuildingForm from "./BuildingForm"
 import Map from "./Map"
-import { useNavigate } from 'react-router-dom'
-import { Outlet } from 'react-router-dom'
-import { NavLink } from 'react-router-dom'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, Outlet, NavLink, useSearchParams } from 'react-router-dom'
 
 const BuildingList = () => {
   const navigate = useNavigate()
@@ -92,7 +89,7 @@ const BuildingList = () => {
               <div>
                 longitude : {building.longitude}
               </div>
-              <button onClick={() => navigate(`/building-detail/${building.id}`)}>Open</button>
+              <button onClick={() => navigate(`/buildings/${building.id}`)}>Open</button>
               <button onClick={() => deleteBuildingMutation.mutate({ id: building.id })}>Delete</button>
             </div>
             <div className="right">
