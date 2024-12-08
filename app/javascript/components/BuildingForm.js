@@ -18,32 +18,60 @@ const BuildingForm = ({
     setNewBuilding({ ...newBuilding, [e.target.name]: e.target.value })
   }
 
-  // TODO handle text/list
   const renderInputField = (fieldMeta) => {
     switch (fieldMeta.type) {
-      case 'Freeform':
-        break;
       case 'Number':
+        return (
+          <label key={fieldMeta.name} htmlFor={fieldMeta.name}>{fieldMeta.name}
+            <input
+              id={fieldMeta.name}
+              type="number"
+              value={initialValue[fieldMeta.name]}
+              name={fieldMeta.name}
+              onChange={handleInputChange}
+              placeholder="enter a value"
+              defaultValue=""
+            />
+          </label>
+        )
         break;
       case 'Enum':
-        // also add options
+        return (
+          <label key={fieldMeta.name} htmlFor={fieldMeta.name}>
+            {fieldMeta.name}
+            <select 
+              id={fieldMeta.name}
+              value={initialValue[fieldMeta.name]}
+              name={fieldMeta.name}
+              onChange={handleInputChange}
+              placeholder="select a value"
+              defaultValue=""
+            >
+              {
+                fieldMeta.options.map((v) => (
+                  <option key={v} value={v}>{v}</option>
+                ))
+              }
+            </select>
+          </label>
+        )
         break;
+      case 'Freeform':
       default:
-        {};
+        return (
+          <label key={fieldMeta.name} htmlFor={fieldMeta.name}>{fieldMeta.name}
+            <input
+              id={fieldMeta.name}
+              type="text"
+              value={initialValue[fieldMeta.name]}
+              name={fieldMeta.name}
+              onChange={handleInputChange}
+              placeholder="enter a value"
+              defaultValue=""
+            />
+          </label>
+        )
     }
-    return (
-      <label key={fieldMeta.name} htmlFor={fieldMeta.name}>{fieldMeta.name}
-        <input
-          id={fieldMeta.name}
-          type="text"
-          value={initialValue[fieldMeta.name]}
-          name={fieldMeta.name}
-          onChange={handleInputChange}
-          placeholder="enter a value"
-          defaultValue=""
-        />
-      </label>
-    )
   }
 
   return (

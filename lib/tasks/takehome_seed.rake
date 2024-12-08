@@ -1,4 +1,4 @@
-# rails db:seed:takehome
+# rails db:seed:clear_and_seed
 
 namespace :db do
   namespace :seed do
@@ -10,6 +10,8 @@ namespace :db do
         Building.destroy_all
         CustomField.destroy_all
         Client.destroy_all
+
+        construction_materials = ["Vinyl", "Stone", "Glass"]
 
         # Seed the clients table with 5 clients.
         # You can name the clients anything you wish.
@@ -35,9 +37,11 @@ namespace :db do
             }, {
               name: "Live-In Super",
               type: "Enum",
+              options: ["yes", "no"],
             }, {
               name: "Construction Materials",
               type: "Enum",
+              options: construction_materials,
             },
           ].each { client.custom_fields.create(_1) }
         }
@@ -54,26 +58,13 @@ namespace :db do
               state: Faker::Address.state,
               zip: Faker::Address.zip[0...5],
               additional_fields: {
-                fields: [
-                  {
-                    name: "Number of Washing Machines",
-                    value: rand(10),
-                  }, {
-                    name: "Color",
-                    value: Faker::Color.color_name,
-                  }, {
-                    name: "Access Code",
-                    value: 6.times.map{rand(10)}.join,
-                  }, {
-                    name: "Live-In Super",
-                    value: "Enum",
-                    options: ["yes", "no"],
-                  }, {
-                    name: "Construction Materials",
-                    value: "Enum",
-                    options: 5.times { Faker::Construction.material },
-                  },
-                ].shuffle.first(rand(1...5))
+                fields: {
+                  "Number of Washing Machines" => rand(10),
+                  "Color" => Faker::Color.color_name,
+                  "Access Code" => 6.times.map{rand(10)}.join,
+                  "Live-In Super" => ["yes", "no"][rand(0...1)],
+                  "Construction Material" => construction_materials.shuffle.first,
+                }
               }
             )
           }

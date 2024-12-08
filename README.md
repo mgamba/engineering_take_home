@@ -4,6 +4,7 @@
 ```
 alias test='RAILS_ENV=test bundle exec rspec'
 alias serve='export PORT=3002 && rm -f tmp/pids/server.pid && yarn && bundle && ./bin/dev'
+rails db:seed:clear_and_seed
 ```
 
 # Perchwell Engineering Take-Home

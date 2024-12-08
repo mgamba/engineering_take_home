@@ -7,5 +7,4 @@ class Building < ApplicationRecord
       %w[latitude longitude address city state zip]
     end
   end
-  #{"additional_fields", default: {}, null: false
 end
