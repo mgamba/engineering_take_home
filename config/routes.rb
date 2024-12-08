@@ -13,6 +13,9 @@ Rails.application.routes.draw do
   resources :buildings, only: [:index, :create, :update, :destroy]
   get "buildings/metadata"
 
+
+  match "*path", to: "welcome#index", via: :all
+
   # Defines the root path route ("/")
   root "welcome#index"
 end

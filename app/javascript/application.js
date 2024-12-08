@@ -3,6 +3,8 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { RouterProvider } from 'react-router-dom';
+import { router } from './routes';
 
 import App from './App';
 
@@ -14,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   root.render(
     <>
       <QueryClientProvider client={queryClient}>
-      <App />
+      <RouterProvider router={router} />
       <ReactQueryDevtools initialIsOpen />
       </QueryClientProvider>
     </>

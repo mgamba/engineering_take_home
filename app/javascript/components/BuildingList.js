@@ -3,10 +3,17 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getBuildings, addBuilding, updateBuilding, deleteBuilding, getBuildingMetadata } from "../api/buildingsApi"
 import { useState, useEffect } from "react"
 import BuildingForm from "./BuildingForm"
+import { useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
 const BuildingList = () => {
-  const [buildingMetadata, setBuildingMetadata] = useState({})
+  const navigate = useNavigate()
+  console.log("here");
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  const [buildingMetadata, setBuildingMetadata] = useState({})
   useEffect(() => {
     let ignore = false;
 
@@ -23,18 +30,25 @@ const BuildingList = () => {
     };
   }, []);
 
-  const [buildingPage, setBuildingPage] = useState(1)
+  const buildingPage = () => {
+    const page = searchParams.get('page');
+    console.log("buildingPage() = ", page); 
+    return page || 1
+  }
+
   const {
     isLoading,
     isError,
     error,
     data: buildings
-  } = useQuery(['buildings', buildingPage], getBuildings)
+  } = useQuery(['buildings', buildingPage()], getBuildings)
   const handleNextPageClick = () => {
-    setBuildingPage(buildingPage + 1)
+    console.log('handleNextPageClick -> setSearchParams');
+    setSearchParams({ page: Number(buildingPage()) + 1 })
   }
   const handlePrevPageClick = () => {
-    setBuildingPage(buildingPage - 1 || 1)
+    console.log('handlePrevPageClick -> setSearchParams');
+    setSearchParams({ page: buildingPage() - 1 || 1 })
   }
 
   const queryClient = useQueryClient()
@@ -82,11 +96,10 @@ const BuildingList = () => {
               <div>
                 longitude : {building.longitude}
               </div>
+              <button onClick={() => navigate(`/building-detail/${building.id}`)}>Open</button>
+              <button onClick={() => deleteBuildingMutation.mutate({ id: building.id })}>Delete</button>
             </div>
           </div>
-          <button onClick={() => deleteBuildingMutation.mutate({ id: building.id })}>
-            Delete building
-          </button>
         </article>
       )
     });
@@ -94,12 +107,6 @@ const BuildingList = () => {
 
   return (
     <main>
-      <h2>Building Form</h2>
-      <BuildingForm
-        onSubmit={handleNewBuildingSubmit}
-        buildingMetadata={buildingMetadata}
-        initialValue={{}}
-      />
       <h2>Building List</h2>
       <button onClick={handlePrevPageClick}>Prev Page</button>
       <button onClick={handleNextPageClick}>Next Page</button>
