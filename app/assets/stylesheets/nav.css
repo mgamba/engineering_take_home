@@ -1,0 +1,18 @@
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav * {
+  flex-shrink: 0;
+}
+
+.nav .nav-links {
+  display: flex;
+  flex-direction: row;
+}
+
+.nav .nav-links > * {
+  margin: 5px;
+}

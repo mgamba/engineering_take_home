@@ -15,6 +15,9 @@ Rails.application.routes.draw do
     resources :buildings, only: [:index, :create, :update, :destroy, :show], :format => /json/
   end
 
+  resources :sessions, only: [:create, :index]
+  get "session" => "sessions#show"
+
   match "*path", to: "welcome#index", via: :all
 
   # Defines the root path route ("/")

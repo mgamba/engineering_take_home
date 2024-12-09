@@ -4,8 +4,10 @@ import { addBuilding, getBuildingMetadata } from "../api/buildingsApi";
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import BuildingForm from "./BuildingForm"
+import { getSessions, currentClientId } from "../api/sessionsApi"
 
 const NewBuilding = () => {
+  const { data: sessions } = useQuery(['sessions'], getSessions)
   const navigate = useNavigate();
 
   const [buildingMetadata, setBuildingMetadata] = useState({})
@@ -34,9 +36,10 @@ const NewBuilding = () => {
 
   const queryClient = useQueryClient()
   const addBuildingMutation = useMutation(addBuilding, {
-    onSuccess: () => {
+    onSuccess: (response) => {
       //invalidate cache and trigger refetch
       queryClient.invalidateQueries("building")
+      navigate(`/buildings/${response.data.id}`);
     }
   })
   const handleNewBuildingSubmit = (newBuilding) => {
@@ -45,12 +48,22 @@ const NewBuilding = () => {
 
   return (
     <>
-      <h2>Create a New Building</h2>
-      <BuildingForm
-        onSubmit={handleNewBuildingSubmit}
-        buildingMetadata={buildingMetadata}
-        initialValue={{}}
-      />
+      {(sessions)
+        ? ((currentClientId(sessions))
+            ? <><h2>Create a New Building</h2>
+              <BuildingForm
+                onSubmit={handleNewBuildingSubmit}
+                buildingMetadata={buildingMetadata}
+                initialValue={{}}
+              /></>
+            : <>
+                sign in to create a building
+              </>
+          )
+        : <>
+            loading...
+          </>
+      }
     </>
   );
 }

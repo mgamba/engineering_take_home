@@ -1,11 +1,14 @@
 import React from 'react'
 import { useState } from 'react'
+import { getSessions, currentClientId } from "../api/sessionsApi"
+import { useQuery } from "react-query";
 
 const BuildingForm = ({
   onSubmit,
   buildingMetadata,
   initialValue
 }) => {
+  const { data: sessions } = useQuery(['sessions'], getSessions)
   const [building, setBuilding] = useState({ ...initialValue })
 
   const handleSubmit = (e) => {
@@ -72,7 +75,7 @@ const BuildingForm = ({
 
   return (
     <div>
-      {buildingMetadata.metadata 
+      {(buildingMetadata.metadata && sessions)
         ? <div className="building-form">
             <form onSubmit={handleSubmit}>
               <fieldset>
@@ -83,7 +86,10 @@ const BuildingForm = ({
                   })
                 }
               </fieldset>
-              <button>{building.id ? "Update" : "Create"}</button>
+              {(currentClientId(sessions) === building.client_id)
+                ? <button>{building.id ? "Update" : "Create"}</button>
+                : null
+              }
             </form>
           </div>
         : <>

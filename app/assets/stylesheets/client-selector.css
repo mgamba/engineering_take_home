@@ -1,0 +1,9 @@
+.client-selector {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.client-selector > div {
+  margin: 5px;
+}

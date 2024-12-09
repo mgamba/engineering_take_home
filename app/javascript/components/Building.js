@@ -5,8 +5,11 @@ import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import Map from "./Map"
 import BuildingForm from "./BuildingForm"
+import { getSessions, currentClientId } from "../api/sessionsApi"
 
 const Building = () => {
+  const { data: sessions } = useQuery(['sessions'], getSessions)
+
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const {id: buildingId} = useParams();
@@ -46,6 +49,7 @@ const Building = () => {
     onSuccess: () => {
       //invalidate cache and trigger refetch
       queryClient.invalidateQueries("building")
+      navigate(`/buildings`);
     }
   })
 
@@ -65,12 +69,12 @@ const Building = () => {
               <div className="left">
                 <strong>building {building.id} </strong>
                 <div>
-                  latitude: {building.latitude}
+                  owner: {building.client_name}
                 </div>
-                <div>
-                  longitude : {building.longitude}
-                </div>
-                <button className="danger" onClick={() => deleteBuildingMutation.mutate({ id: building.id })}>Delete</button>
+                {(sessions && currentClientId(sessions) === building.client_id)
+                  ? <button className="danger" onClick={() => { if (window.confirm('Are you sure?')) deleteBuildingMutation.mutate({ id: building.id }) } }>Delete</button>
+                  : null
+                }
               </div>
               <div className="right">
                 <Map latitude={building.latitude} longitude={building.longitude} />

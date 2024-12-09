@@ -3,11 +3,10 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getBuildings, addBuilding, updateBuilding, deleteBuilding, getBuildingMetadata } from "../api/buildingsApi"
 import { useState, useEffect } from "react"
 import BuildingForm from "./BuildingForm"
-import Map from "./Map"
-import { useNavigate, Outlet, NavLink, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
+import BuildingCard from "./BuildingCard"
 
 const BuildingList = () => {
-  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [buildingMetadata, setBuildingMetadata] = useState({})
@@ -69,24 +68,7 @@ const BuildingList = () => {
   } else {
     content = buildings.buildings.map((building) => {
       return (
-        <article key={building.id}>
-          <div className="building building-preview">
-            <div className="left">
-              <strong>building {building.id} </strong>
-              <div>
-                latitude: {building.latitude}
-              </div>
-              <div>
-                longitude : {building.longitude}
-              </div>
-              <button onClick={() => navigate(`/buildings/${building.id}`)}>Open</button>
-              <button onClick={() => deleteBuildingMutation.mutate({ id: building.id })}>Delete</button>
-            </div>
-            <div className="right">
-              <Map latitude={building.latitude} longitude={building.longitude} />
-            </div>
-          </div>
-        </article>
+        <BuildingCard key={building.id} building={building} />
       )
     });
   }
