@@ -40,7 +40,13 @@ const NewBuilding = () => {
       //invalidate cache and trigger refetch
       queryClient.invalidateQueries("building")
       navigate(`/buildings/${response.data.id}`);
-    }
+    },
+    onError: (error) => {
+      const message = error?.response?.data?.message;
+      if (message !== undefined) {
+        alert(`Error Saving Building: ${message}`);
+      }
+    },
   })
   const handleNewBuildingSubmit = (newBuilding) => {
     addBuildingMutation.mutate({ ...newBuilding })

@@ -3,6 +3,15 @@ import { useState } from 'react'
 import { getSessions, currentClientId } from "../api/sessionsApi"
 import { useQuery } from "react-query";
 
+const format = (object, metadata) => {
+  metadata.map((fieldMeta) => {
+    if (fieldMeta.type === "Number") {
+      object[fieldMeta.name] = Number(object[fieldMeta.name])
+    }
+  })
+  return(object)
+};
+
 const BuildingForm = ({
   onSubmit,
   buildingMetadata,
@@ -13,7 +22,7 @@ const BuildingForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSubmit(building)
+    onSubmit(format(building, buildingMetadata.metadata))
   }
 
   const handleInputChange = (e) => {
@@ -73,6 +82,20 @@ const BuildingForm = ({
     }
   }
 
+  const formButton = ((clientId ) => {
+    if (!clientId) return null;
+
+    if (!building.id) {
+      return <button>Create</button>;
+    }
+
+    if (clientId === building.client_id) {
+      return <button>Update</button>;
+    }
+
+    return null;
+  })(currentClientId(sessions || []));
+
   return (
     <div>
       {(buildingMetadata.metadata && sessions)
@@ -86,10 +109,7 @@ const BuildingForm = ({
                   })
                 }
               </fieldset>
-              {(currentClientId(sessions) === building.client_id)
-                ? <button>{building.id ? "Update" : "Create"}</button>
-                : null
-              }
+              {formButton}
             </form>
           </div>
         : <>

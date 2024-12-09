@@ -37,8 +37,8 @@ External APIs:
 
 client api:
 - [x] Create a single Building associated with a client
-- [ ] error if any Building values were sent that were incorrect
-- [ ] Return a success message if Buidling is saved correctly
+- [x] error if any Building values were sent that were incorrect
+- [?] Return a success message if Building is saved correctly
 - [x] Edit Building
 - [x] Building index
 - [x] basic pagination

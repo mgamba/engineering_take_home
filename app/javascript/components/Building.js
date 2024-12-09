@@ -43,7 +43,13 @@ const Building = () => {
     onSuccess: () => {
       //invalidate cache and trigger refetch
       queryClient.invalidateQueries("building")
-    }
+    },
+    onError: (error) => {
+      const message = error?.response?.data?.message;
+      if (message !== undefined) {
+        alert(`Error Saving Building: ${message}`);
+      }
+    },
   })
   const deleteBuildingMutation = useMutation(deleteBuilding, {
     onSuccess: () => {

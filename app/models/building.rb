@@ -6,6 +6,12 @@ class Building < ApplicationRecord
     def user_editable_columns
       %w[latitude longitude address city state zip]
     end
+
+    def metadata(custom_fields:)
+      default_fields = Building.user_editable_columns.map{{ name: _1, type: "Freeform" }}.as_json
+      custom_fields = custom_fields.as_json(only: [:name, :type, :options])
+      default_fields + custom_fields
+    end
   end
 
   def serialized_as_json
@@ -17,5 +23,9 @@ class Building < ApplicationRecord
       .merge(populated_custom_attrs)
       .merge(default_attrs)
       .merge(client_name: client.name)
+  end
+
+  def metadata
+    Building.metadata(custom_fields:)
   end
 end

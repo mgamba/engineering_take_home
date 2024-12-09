@@ -1,4 +1,6 @@
 class BuildingsController < ApiController
+  before_action :validate_params, only: [:create, :update]
+
   def index
     buildings = Building.order(created_at: :desc).page(params[:page])
     render json: serialize(buildings)
@@ -16,9 +18,7 @@ class BuildingsController < ApiController
   end
 
   def metadata
-    default_fields = Building.user_editable_columns.map{{ name: _1, type: "Freeform" }}
-    custom_fields = current_client.custom_fields.as_json(only: [:name, :type, :options])
-    render json: { metadata: default_fields + custom_fields }
+    render json: { metadata: Building.metadata(custom_fields: current_client.custom_fields) }
   end
 
   def show
@@ -35,17 +35,8 @@ class BuildingsController < ApiController
   private
 
   def building_params
-    _params = { additional_fields: {} }
-
     default_fields = Building.user_editable_columns
-    default_fields.each do |k|
-      _params[k] = params[k] if params.has_key?(k)
-    end
-
     custom_fields = current_client.custom_fields.pluck(:name)
-    custom_fields.each do |k|
-      _params[:additional_fields][k] = params[k] if params.has_key?(k)
-    end
 
     request.parameters.slice(*default_fields).merge({
       additional_fields: request.parameters.slice(*custom_fields)
@@ -61,5 +52,13 @@ class BuildingsController < ApiController
     else
       building_response.serialized_as_json
     end
+  end
+
+  def validate_params
+    metadata = Building.metadata(custom_fields: current_client.custom_fields)
+    _params = request.parameters.slice(*metadata.map{_1["name"]})
+    FieldValidator.validate!(metadata:, params: _params)
+  rescue JSON::Schema::ValidationError => e
+    render json: { status: "failure", message: e.message }, :status => :bad_request
   end
 end
