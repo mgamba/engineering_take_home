@@ -25,7 +25,7 @@ const BuildingForm = ({
             <input
               id={fieldMeta.name}
               type={"number"}
-              value={Number(building[fieldMeta.name])}
+              value={Number(building[fieldMeta.name]||0)}
               name={fieldMeta.name}
               onChange={handleInputChange}
               placeholder={"enter a value"}
@@ -83,7 +83,7 @@ const BuildingForm = ({
                   })
                 }
               </fieldset>
-              <button>Update</button>
+              <button>{building.id ? "Update" : "Create"}</button>
             </form>
           </div>
         : <>

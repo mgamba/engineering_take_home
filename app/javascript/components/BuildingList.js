@@ -46,12 +46,6 @@ const BuildingList = () => {
   }
 
   const queryClient = useQueryClient()
-  const addBuildingMutation = useMutation(addBuilding, {
-    onSuccess: () => {
-      //invalidate cache and trigger refetch
-      queryClient.invalidateQueries("buildings")
-    }
-  })
 
   const updateBuildingMutation = useMutation(updateBuilding, {
     onSuccess: () => {
@@ -66,10 +60,6 @@ const BuildingList = () => {
       queryClient.invalidateQueries("buildings")
     }
   })
-
-  const handleNewBuildingSubmit = (newBuilding) => {
-    addBuildingMutation.mutate({ ...newBuilding })
-  }
 
   let content
   if (isLoading) {

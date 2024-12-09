@@ -39,7 +39,7 @@ class BuildingsController < ApiController
 
     default_fields = Building.user_editable_columns
     default_fields.each do |k|
-      _params[k] = params["building"][k] if params["building"].has_key?(k)
+      _params[k] = params[k] if params.has_key?(k)
     end
 
     custom_fields = current_client.custom_fields.pluck(:name)

@@ -17,7 +17,7 @@ export const getBuilding = async ({ queryKey }) => {
 }
 
 export const addBuilding = async (building) => {
-  return await buildingsApi.post("/buildings.json", {building: building});
+  return await buildingsApi.post("/buildings.json", building);
 }
 
 export const updateBuilding = async (building) => {
