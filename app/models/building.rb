@@ -11,7 +11,7 @@ class Building < ApplicationRecord
   def serialized_as_json
     default_attrs = as_json.slice("id", *Building.user_editable_columns)
     all_custom_attrs = custom_fields.pluck(:name).zip([nil].cycle).to_h
-    populated_custom_attrs = additional_fields["fields"] || {}
+    populated_custom_attrs = additional_fields
 
     all_custom_attrs
       .merge(populated_custom_attrs)

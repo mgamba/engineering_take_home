@@ -23,7 +23,7 @@
 .building-form label {
   flex-grow: 0;
   flex-shrink: 0;
-  flex-basis: 33.3333%;
+  flex-basis: 31%;
   position: relative;
   display: table;
   margin: 0 0 1rem;

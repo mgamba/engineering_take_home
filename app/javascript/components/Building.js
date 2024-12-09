@@ -4,13 +4,12 @@ import { updateBuilding, deleteBuilding, getBuildingMetadata, getBuilding } from
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import Map from "./Map"
+import BuildingForm from "./BuildingForm"
 
 const Building = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  console.log("useParams:", useParams());
   const {id: buildingId} = useParams();
-  console.log("BUILDING ID:", buildingId);
 
   const [buildingMetadata, setBuildingMetadata] = useState({})
   useEffect(() => {
@@ -50,14 +49,18 @@ const Building = () => {
     }
   })
 
-  console.log(building);
+  const handleEditBuildingSubmit = (updateBuilding) => {
+    updateBuildingMutation.mutate({ ...updateBuilding })
+  }
+
   return (
     <div>
       {(building === undefined)
-        ? <>
-            loading...
-          </>
-        : <article>
+      ? <>
+          loading...
+        </>
+      : <>
+          <article>
             <div className="building building-preview">
               <div className="left">
                 <strong>building {building.id} </strong>
@@ -67,13 +70,21 @@ const Building = () => {
                 <div>
                   longitude : {building.longitude}
                 </div>
-                <button onClick={() => deleteBuildingMutation.mutate({ id: building.id })}>Delete</button>
+                <button className="danger" onClick={() => deleteBuildingMutation.mutate({ id: building.id })}>Delete</button>
               </div>
               <div className="right">
                 <Map latitude={building.latitude} longitude={building.longitude} />
               </div>
             </div>
           </article>
+          <article>
+            <BuildingForm
+              onSubmit={handleEditBuildingSubmit}
+              buildingMetadata={buildingMetadata}
+              initialValue={building}
+            />
+          </article>
+        </>
       }
     </div>
   )

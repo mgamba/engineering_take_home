@@ -6,30 +6,29 @@ const BuildingForm = ({
   buildingMetadata,
   initialValue
 }) => {
-  const [newBuilding, setNewBuilding] = useState({ ...initialValue })
+  const [building, setBuilding] = useState({ ...initialValue })
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSubmit(newBuilding)
+    onSubmit(building)
   }
 
   const handleInputChange = (e) => {
-    setNewBuilding({ ...newBuilding, [e.target.name]: e.target.value })
+    setBuilding({ ...building, [e.target.name]: e.target.value })
   }
 
-  const renderInputField = (fieldMeta) => {
+  const renderInputField = (fieldMeta, building) => {
     switch (fieldMeta.type) {
       case 'Number':
         return (
           <label key={fieldMeta.name} htmlFor={fieldMeta.name}>{fieldMeta.name}
             <input
               id={fieldMeta.name}
-              type="number"
-              value={initialValue[fieldMeta.name]}
+              type={"number"}
+              value={Number(building[fieldMeta.name])}
               name={fieldMeta.name}
               onChange={handleInputChange}
-              placeholder="enter a value"
-              defaultValue=""
+              placeholder={"enter a value"}
             />
           </label>
         )
@@ -40,11 +39,10 @@ const BuildingForm = ({
             {fieldMeta.name}
             <select 
               id={fieldMeta.name}
-              value={initialValue[fieldMeta.name]}
+              value={building[fieldMeta.name] || ""}
               name={fieldMeta.name}
               onChange={handleInputChange}
-              placeholder="select a value"
-              defaultValue=""
+              placeholder={"select a value"}
             >
               {
                 fieldMeta.options.map((v) => (
@@ -61,12 +59,11 @@ const BuildingForm = ({
           <label key={fieldMeta.name} htmlFor={fieldMeta.name}>{fieldMeta.name}
             <input
               id={fieldMeta.name}
-              type="text"
-              value={initialValue[fieldMeta.name]}
+              type={"text"}
+              value={building[fieldMeta.name] || ""}
               name={fieldMeta.name}
               onChange={handleInputChange}
-              placeholder="enter a value"
-              defaultValue=""
+              placeholder={"enter a value"}
             />
           </label>
         )
@@ -79,14 +76,14 @@ const BuildingForm = ({
         ? <div className="building-form">
             <form onSubmit={handleSubmit}>
               <fieldset>
-                <legend>New Building</legend>
+                <legend>Building</legend>
                 {
                   buildingMetadata.metadata.map((fieldMeta) => {
-                    return renderInputField(fieldMeta)
+                    return renderInputField(fieldMeta, building)
                   })
                 }
               </fieldset>
-              <button>Submit</button>
+              <button>Update</button>
             </form>
           </div>
         : <>

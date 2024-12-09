@@ -25,17 +25,30 @@ class BuildingsController < ApiController
     building = current_client.buildings.where(id: params[:id]).sole
     render json: building.serialized_as_json
   end
+
+  def update
+    building = current_client.buildings.where(id: params[:id]).sole
+    building.update!(building_params)
+    render json: building.serialized_as_json
+  end
  
   private
 
   def building_params
+    _params = { additional_fields: {} }
+
     default_fields = Building.user_editable_columns
-    custom_fields = current_client.custom_fields.map(&:name)
+    default_fields.each do |k|
+      _params[k] = params["building"][k] if params["building"].has_key?(k)
+    end
 
-    safe_params = params.require(:building).permit(*default_fields, *custom_fields)
+    custom_fields = current_client.custom_fields.pluck(:name)
+    custom_fields.each do |k|
+      _params[:additional_fields][k] = params[k] if params.has_key?(k)
+    end
 
-    safe_params.slice(*default_fields).merge({
-      additional_fields: safe_params.slice(*custom_fields)
+    request.parameters.slice(*default_fields).merge({
+      additional_fields: request.parameters.slice(*custom_fields)
     })
   end
 end

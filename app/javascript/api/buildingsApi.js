@@ -21,7 +21,8 @@ export const addBuilding = async (building) => {
 }
 
 export const updateBuilding = async (building) => {
-  return await buildingsApi.patch(`/buildings/${building.id}.json`, building);
+  const { id, ...updateAttrs } = building;
+  return await buildingsApi.patch(`/buildings/${building.id}.json`, updateAttrs);
 }
 
 export const deleteBuilding = async ({ id }) => {
